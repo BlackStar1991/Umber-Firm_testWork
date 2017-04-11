@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>TestWork_Task2</title>
+    <style>
+
+        #dataTable {
+            border: 1px solid #000;
+        }
+
+
+
+        .button {
+            position: relative;
+            float: left;
+            margin-left: 2px;
+            width: 30px;
+            height: 30px;
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+
+        .button:active,
+        .button:focus {
+            background-color: #f00;
+        }
+
+        .skin {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            margin-left: -25%;
+            margin-top: -25%;
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+<div class="dataTableWrapper">
+    <input type="text" id="dataTableFilter"/>
+    <a id="dataTableSortAsc" class="button">
+        <i class="fa fa-sort-alpha-asc skin" aria-hidden="true"></i>
+    </a>
+    <a id="dataTableSortDesc" class="button">
+        <i class="fa fa-sort-alpha-desc skin" aria-hidden="true"></i>
+    </a>
+
+
+    <table id="dataTable" cellpadding="10" border="1">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Gender</th>
+        </tr>
+    </table>
+</div>
+<script>
+
+    function TableManager(tableElement) {
+        this.table = document.getElementById(tableElement);
+        this.tableSortAsc = document.getElementById(tableElement + "SortAsc");
+        this.tableSortDesc = document.getElementById(tableElement + "SortDesc");
+        this.tableFilter = document.getElementById(tableElement + "Filter");
+        this.filter = '';
+        this.sortOrder = 0;
+
+        this.initialize = function () {
+            var $this = this;
+
+            this.refreshTable();
+
+            this.tableFilter.addEventListener("keyup", function (evt) {
+                $this.filter = $this.tableFilter.value;
+                $this.refreshTable();
+            }, false);
+
+            this.tableSortAsc.addEventListener("click", function (evt) {
+                $this.sortOrder = 1;
+                $this.refreshTable();
+            }, false);
+
+            this.tableSortDesc.addEventListener("click", function (evt) {
+                $this.sortOrder = -1;
+                $this.refreshTable();
+            }, false);
+        };
+
+        this.removeAllRows = function () {
+            var tableRows = this.table.getElementsByTagName('tr');
+            var rowCount = tableRows.length;
+            for (var x = rowCount - 1; x > 0; x--) {
+                this.table.removeChild(tableRows[x]);
+            }
+        };
+
+        this.refreshTable = function () {
+            this.removeAllRows();
+            var collection = this.getUserCollection();
+
+            if (this.filter != '') {
+                collection = this.filterCollectionByName(collection, this.filter);
+            }
+
+            if (this.sortOrder == 1) {
+                collection = this.sortCollectionAsc(collection);
+            } else if (this.sortOrder == -1) {
+                collection = this.sortCollectionDesc(collection);
+            }
+
+
+            for (var key in collection) {
+                var tr = document.createElement("tr");
+
+                var tdName = document.createElement("td");
+                var tdEmail = document.createElement("td");
+                var tdGender = document.createElement("td");
+
+                tdName.appendChild(document.createTextNode(
+                    collection[key].first_name + ' ' + collection[key].last_name
+                ));
+                tdEmail.appendChild(document.createTextNode(collection[key].email));
+                tdGender.appendChild(document.createTextNode(collection[key].gender));
+
+                tr.appendChild(tdName);
+                tr.appendChild(tdEmail);
+                tr.appendChild(tdGender);
+
+                this.table.appendChild(tr);
+            }
+
+
+        };
+
+
+        this.getUserCollection = function () {
+
+            return [{
+                "id": 1,
+                "first_name": "Jonathan",
+                "last_name": "Mendoza",
+                "email": "jmendoza0@posterous.com",
+                "gender": "Male"
+            }, {
+                "id": 2,
+                "first_name": "Sandra",
+                "last_name": "Payne",
+                "email": "spayne1@unc.edu",
+                "gender": "Female"
+            }, {
+                "id": 3,
+                "first_name": "Denise",
+                "last_name": "Rodriguez",
+                "email": "drodriguez2@slashdot.org",
+                "gender": "Female"
+            }, {
+                "id": 4,
+                "first_name": "Irene",
+                "last_name": "Armstrong",
+                "email": "iarmstrong3@blogspot.com",
+                "gender": "Female"
+            }, {
+                "id": 5,
+                "first_name": "Raymond",
+                "last_name": "Moreno",
+                "email": "rmoreno4@rakuten.co.jp",
+                "gender": "Male"
+            }, {
+                "id": 6,
+                "first_name": "Carolyn",
+                "last_name": "Gray",
+                "email": "cgray5@eepurl.com",
+                "gender": "Female"
+            }, {
+                "id": 7,
+                "first_name": "Gerald",
+                "last_name": "Price",
+                "email": "gprice6@reverbnation.com",
+                "gender": "Male"
+            }, {
+                "id": 8,
+                "first_name": "Gloria",
+                "last_name": "Simpson",
+                "email": "gsimpson7@example.com",
+                "gender": "Female"
+            }, {
+                "id": 9,
+                "first_name": "Harold",
+                "last_name": "Kelly",
+                "email": "hkelly8@reddit.com",
+                "gender": "Male"
+            }, {
+                "id": 10,
+                "first_name": "Lori",
+                "last_name": "Dean",
+                "email": "ldean9@hibu.com",
+                "gender": "Female"
+            }, {
+                "id": 11,
+                "first_name": "Linda",
+                "last_name": "Mendoza",
+                "email": "lmendozaa@tuttocitta.it",
+                "gender": "Female"
+            }, {
+                "id": 12,
+                "first_name": "Eric",
+                "last_name": "Collins",
+                "email": "ecollinsb@xrea.com",
+                "gender": "Male"
+            }, {
+                "id": 13,
+                "first_name": "Frank",
+                "last_name": "Coleman",
+                "email": "fcolemanc@drupal.org",
+                "gender": "Male"
+            }, {
+                "id": 14,
+                "first_name": "Doris",
+                "last_name": "Banks",
+                "email": "dbanksd@usa.gov",
+                "gender": "Female"
+            }, {
+                "id": 15,
+                "first_name": "Arthur",
+                "last_name": "Green",
+                "email": "agreene@addtoany.com",
+                "gender": "Male"
+            }];
+        };
+
+        this.sortCollectionAsc = function (collection) {
+            collection.sort(function (a, b) {
+                if (a.first_name < b.first_name) return -1;
+                if (a.first_name > b.first_name) return 1;
+                return 0;
+            });
+
+            return collection;
+        };
+
+        this.sortCollectionDesc = function (collection) {
+            collection.sort(function (a, b) {
+                if (a.first_name < b.first_name) return 1;
+                if (a.first_name > b.first_name) return -1;
+                return 0;
+            });
+
+            return collection;
+        };
+
+        this.filterCollectionByName = function (collection, filterString) {
+
+            var filteredCollection = new Array();
+
+            for (var key in collection) {
+
+                if (collection[key].first_name.toLowerCase().includes(filterString.toLowerCase())) {  //////////////////
+                    filteredCollection.push(collection[key]);
+                }
+            }
+
+            return filteredCollection;
+        };
+    }
+
+    window.onload = function () {
+        var tableManager = new TableManager('dataTable');
+        tableManager.initialize();
+    }
+
+
+</script>
+
+</body>
+</html>
